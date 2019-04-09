@@ -4,7 +4,9 @@ import App from './App';
 import Display from './components/Display/Display';
 import Dashboard from './components/Dashboard/Dashboard';
 
-import { render, fireEvent } from 'react-testing-library';
+import { render, fireEvent, cleanup } from 'react-testing-library';
+
+afterEach(cleanup)
 
 describe('<App />', () => {
   it('App renders without crashing', () => {
@@ -22,7 +24,7 @@ describe('<App />', () => {
   })
 
   // strikes increase when strikes button clicked
-  describe('Dashboard Buttons', () => {
+  describe('Strike Button', () => {
     test('strikes count is always 0, 1 or 2', () => {
       const { getByText } = render(<App />);
       getByText(/strikes: [0,1,2]/i);
@@ -38,9 +40,57 @@ describe('<App />', () => {
       const strikesBtn = document.querySelector('.strikesBtn');
       fireEvent.click(strikesBtn);
       fireEvent.click(strikesBtn);
-      debug();
-      getByText(/strikes: 1/i)
+      // fireEvent.click(strikesBtn);
+      getByText(/strikes: 2/i)
     })
+
+    test('strikes count rolls over to zero when there are three strikes, also increases outs by one', () => {
+      const { getByText, debug } = render(<App />);
+      const strikesBtn = document.querySelector('.strikesBtn');
+      fireEvent.click(strikesBtn);
+      fireEvent.click(strikesBtn);
+      fireEvent.click(strikesBtn);
+      getByText(/strikes: 0/i)
+      getByText(/outs: 1/i)
+    })
+  })
+
+  describe('Ball Button', () => {
+
+    test('balls count increases when ball button clicked', () => {
+      const { getByText } = render(<App />);
+      const ballsBtn = document.querySelector('.ballsBtn');
+      fireEvent.click(ballsBtn);
+      getByText(/balls: 1/i);
+    })
+    test('balls count resets to 0 when ball count gets above 3', () => {
+      const { getByText } = render(<App />);
+      const ballsBtn = document.querySelector('.ballsBtn');
+      fireEvent.click(ballsBtn);
+      fireEvent.click(ballsBtn);
+      fireEvent.click(ballsBtn);
+      getByText(/balls: 3/i);
+      fireEvent.click(ballsBtn);
+      getByText(/balls: 0/i);
+    })
+    test('balls count resets strikes when ball count resets', () => {
+      const { getByText } = render(<App />);
+      const ballsBtn = document.querySelector('.ballsBtn');
+      const strikesBtn = document.querySelector('.strikesBtn');
+      fireEvent.click(strikesBtn);
+      getByText(/strikes: 1/i);
+      fireEvent.click(ballsBtn);
+      fireEvent.click(ballsBtn);
+      fireEvent.click(ballsBtn);
+      fireEvent.click(ballsBtn);
+      getByText(/balls: 0/i);
+      getByText(/strikes: 0/i);
+    })
+
+  })
+
+  describe('Foul button', () => {
+
   })
 
   // balls increase when balls are hit

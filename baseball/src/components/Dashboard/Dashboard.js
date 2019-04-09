@@ -6,9 +6,9 @@ function Dashboard(props) {
       <h3>Score Dashboard</h3>
       <div className="dashboard">
         <button onClick={props.handleStrike} className="strikesBtn">Strike</button>
-        <button onClick={props.handleFoul}>foul</button>
-        <button onClick={props.handleBall}>Ball</button>
-        <button onClick={props.handleHit}>hit</button>
+        <button onClick={props.handleFoul} className="foulsBtn">foul</button>
+        <button onClick={props.handleBall} className="ballsBtn">Ball</button>
+        <button onClick={props.handleHit} className="hitBtn">hit</button>
       </div>
     </>
   )
