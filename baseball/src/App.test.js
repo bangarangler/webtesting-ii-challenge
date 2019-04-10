@@ -99,5 +99,26 @@ describe("<App />", () => {
       const element = getByText(/strikes: 1/i);
       expect(element).toHaveTextContent(/strikes: 1/i);
     });
+
+    test("strikes can not go over 2", () => {
+      const { getByText } = render(<App />);
+      const foulBtn = document.querySelector(".foulsBtn");
+      const element = getByText(/strikes: 0/i);
+      fireEvent.click(foulBtn);
+      fireEvent.click(foulBtn);
+      fireEvent.click(foulBtn);
+      expect(element).toHaveTextContent(/strikes: 2/i);
+    });
+  });
+
+  describe("Hit Button", () => {
+    test("hit button should set strikes and ball count back to 0", () => {
+      const { getByText } = render(<App />);
+      const hitBtn = document.querySelector(".hitBtn");
+      getByText(/strikes: 0/i);
+      fireEvent.click(hitBtn);
+      expect(getByText(/strikes: 0/i)).toHaveTextContent(/strikes: 0/i);
+      expect(getByText(/balls: 0/i)).toHaveTextContent(/balls: 0/i);
+    });
   });
 });
